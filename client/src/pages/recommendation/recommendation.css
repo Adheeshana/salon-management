@@ -1,0 +1,81 @@
+.recommendation-container {
+  text-align: center;
+  max-width: 800px; /* Increased max-width for better layout */
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.upload-section {
+  margin: 10px 0;
+}
+
+.upload-btn {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.upload-btn input {
+  display: none;
+}
+
+.upload-btn:hover {
+  background-color: #0056b3;
+}
+
+.image-preview {
+  margin-top: 20px;
+}
+
+.image-preview img {
+  max-width: 200px; /* Reduced display size */
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+button.upload-btn {
+  border: none;
+  display: block;
+  margin: 10px auto;
+}
+
+.hairstyles-section {
+  margin-top: 20px;
+}
+
+.hairstyles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.hairstyle {
+  text-align: center;
+}
+
+.hairstyle img {
+  max-width: 100%; /* Ensure hairstyle images fit the grid */
+  height: auto;
+  border-radius: 10px;
+}
+
+.hairstyle p {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-weight: bold;
+}
