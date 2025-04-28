@@ -76,11 +76,12 @@ function EditProduct() {
             errors.brand = "Brand name must contain letters.";
         }
 
-        // Price validation (must be numeric)
+        // Price validation: must be positive number
         if (isNaN(price) || price <= 0) {
             formIsValid = false;
             errors.price = "Price must be a positive number.";
         }
+
 
         // Quantity validation (must be numeric)
         if (isNaN(quantity) || quantity < 0) {
