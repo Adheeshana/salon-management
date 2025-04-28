@@ -14,6 +14,7 @@ export default class CreatePost extends Component {
             service: "",
             review: "",
             rating: "",
+            date: new Date(), // Add this line
             errors: {}
         };
     }
@@ -87,9 +88,17 @@ export default class CreatePost extends Component {
         e.preventDefault();
         if (!this.validateForm()) return;
 
-        const { name, phone, email, service, review, rating } = this.state;
+        const { name, phone, email, service, review, rating, date } = this.state;
 
-        const data = { name, phone, email, service, review, rating };
+        const data = {
+            name,
+            phone,
+            email,
+            service,
+            review,
+            rating,
+            date: date.toISOString() // Add this line
+        };
 
         axios.post("http://localhost:5000/post/save", data)
             .then((res) => {
@@ -101,7 +110,8 @@ export default class CreatePost extends Component {
                         email: "",
                         service: "",
                         review: "",
-                        rating: ""
+                        rating: "",
+                        date: new Date() // Reset date to current
                     });
                 } else {
                     alert("Submission failed. Please try again.");
@@ -175,6 +185,7 @@ export default class CreatePost extends Component {
                                 <option value='Hair Care'>Hair Care</option>
                                 <option value='Skin Care'>Skin Care</option>
                                 <option value='Nail Care'>Nail Care</option>
+                                <option value='Hair Style recommnedation'>Hair Style recommnedation</option>
                             </select>
                             {errors.service && <span className="error-text" style={{ color: "red" }}>{errors.service}</span>}
                         </div><br />
@@ -188,15 +199,27 @@ export default class CreatePost extends Component {
                                 placeholder="Write your review"
                                 value={this.state.review}
                                 onChange={this.handleInputChange}
-                            ></textarea>
-                            {errors.review && <span className="error-text" style={{ color: "red" }}>{errors.review}</span>}
-                        </div><br />
+                        ></textarea>
+                        {errors.review && <span className="error-text" style={{ color: "red" }}>{errors.review}</span>}
+                    </div><br />
 
-                        <button type="submit" className="btnpostsubmit">Submit</button>
-                    </form>
-                </Feed_Card>
-            </div>
+                    <div className="createfeedpost_input_group">
+                        <input
+                            className='createfeed_input'
+                            type="datetime-local"
+                            id="date"
+                            name="date"
+                            value={this.state.date.toISOString().slice(0, 16)}
+                            onChange={(e) => this.setState({ date: new Date(e.target.value) })}
+                            readOnly
+                        />
+                    </div><br />
+
+                    <button type="submit" className="btnpostsubmit">Submit</button>
+                </form>
+            </Feed_Card>
         </div>
-        );
-    }
+    </div>
+    );
+}
 }
