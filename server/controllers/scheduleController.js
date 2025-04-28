@@ -4,104 +4,108 @@ const Attendence = require("../models/Attend");
 const CronJob = require("node-cron");
 
 exports.initScheduledJobsMinite = () => {
-    const scheduledJobFunction = CronJob.schedule("* * * * *", () => {
+    const scheduledJobFunction = CronJob.schedule("* * * * *", async () => {
         console.log("I'm executed on a schedule!");
-        OrderToTransection();
-        AttendenceToTransection();
-        
+        try {
+            await Promise.all([
+                OrderToTransection(),
+                AttendenceToTransection()
+            ]);
+        } catch (error) {
+            console.error("Scheduled job failed:", error);
+        }
     });
 
     scheduledJobFunction.start();
 }
 
-
-// exports.initScheduledJobsDay = () => {
-//     const scheduledJobFunction = CronJob.schedule("0 0 * * *", () => {
-//     console.log("I'm executed at 12 AM every day!");
-//     // Add your code here
-//        AttendenceToTransection();
+const AttendenceToTransection = async () => {
+    console.log("start AttendenceToTransection");
+    try {
+        const endTime = new Date();
         
-//     });
-
-//     scheduledJobFunction.start();
-// }
-
-const AttendenceToTransection = async()=>{
-    console.log("start AttendenceToTransection")
-    const endTime = new Date();
-    
-    const attendenceDetails = await Attendence.find({
-        end_time: {
-            $lte: endTime.getTime(),
-          },
+        const attendenceDetails = await Attendence.find({
+            end_time: {
+                $lte: endTime.getTime(),
+            },
             isAvilabaleReport: false
-    });
-    console.log("attendenceDetails date",{endTime,attendenceDetails,type:typeof attendenceDetails});
-    if(attendenceDetails!= null && attendenceDetails!=undefined && Array.isArray(attendenceDetails), attendenceDetails.length>0){
-        console.log("inside attendenceDetails if");
-        attendenceDetails.forEach(async (val) => {
-            try {
-            let transectionData= new Object();
-            transectionData.userid=val.user_id;
-            transectionData.amount=val.total;
-            transectionData.category="Salary";
-            transectionData.type="expense";
-            transectionData.refrence=val._id;
-            transectionData.description="Schedule Attendence insert at "+endTime.toISOString();
-            transectionData.date=(new Date(val.end_time)).toISOString();
-            transectionData.isAuto=1;
-            await (new transectionModel(transectionData)).save();
-            val.isAvilabaleReport=true;
-            await Attendence.findOneAndUpdate({_id:val._id},val);
-            
-            console.log("insert attendenceDetails done ", val._id);
-            } catch (error) {
-            console.warn(error);
-            }
         });
-       
-    }
-    console.log("end AttendenceToTransection")
-    
 
+        console.log("attendenceDetails date", { endTime, attendenceDetails });
+        
+        if (attendenceDetails && Array.isArray(attendenceDetails) && attendenceDetails.length > 0) {
+            console.log("inside attendenceDetails if");
+            await Promise.all(attendenceDetails.map(async (val) => {
+                try {
+                    const transectionData = {
+                        userid: val.user_id,
+                        amount: val.total,
+                        category: "Salary",
+                        type: "expense",
+                        refrence: val._id,
+                        description: "Schedule Attendence insert at " + endTime.toISOString(),
+                        date: (new Date(val.end_time)).toISOString(),
+                        isAuto: 1
+                    };
+
+                    await (new transectionModel(transectionData)).save();
+                    await Attendence.findOneAndUpdate(
+                        { _id: val._id },
+                        { isAvilabaleReport: true },
+                        { new: true }
+                    );
+                    
+                    console.log("insert attendenceDetails done ", val._id);
+                } catch (error) {
+                    console.error("Error processing attendance record:", error);
+                }
+            }));
+        }
+    } catch (error) {
+        console.error("AttendenceToTransection failed:", error);
+    }
+    console.log("end AttendenceToTransection");
 }
 
-
-const OrderToTransection = async()=>{
-    console.log("start OrderToTransection")
-    const endTime = new Date();
-    const startTime = new Date(endTime.getTime()-(1*60000));
-    
-    const orderDetails = await Order.find({
-        date: {
-            $gte: startTime,
-            $lte: endTime,
-          }
-    });
-    console.log("date",{endTime,startTime,orderDetails,type:typeof orderDetails});
-    if(orderDetails!= null && orderDetails!=undefined && Array.isArray(orderDetails), orderDetails.length>0){
-        console.log("inside if");
-        orderDetails.forEach(val => {
-            try {
-                let transectionData= new Object();
-                transectionData.userid=val.user_id;
-                transectionData.amount=val.total;
-                transectionData.category="Order";
-                transectionData.type="income";
-                transectionData.refrence=val._id;
-                transectionData.description="Schedule order insert at "+endTime.toISOString();
-                transectionData.date=(new Date(val.date)).toISOString();
-                transectionData.isAuto=1;
-                (new transectionModel(transectionData)).save();
-                console.log("insert done ", val._id);
-            } catch (error) {
-                console.warn(error);
+const OrderToTransection = async () => {
+    console.log("start OrderToTransection");
+    try {
+        const endTime = new Date();
+        const startTime = new Date(endTime.getTime() - (1 * 60000));
+        
+        const orderDetails = await Order.find({
+            date: {
+                $gte: startTime,
+                $lte: endTime,
             }
-            
-
         });
-       
+
+        console.log("date", { endTime, startTime, orderDetails });
+        
+        if (orderDetails && Array.isArray(orderDetails) && orderDetails.length > 0) {
+            console.log("inside if");
+            await Promise.all(orderDetails.map(async (val) => {
+                try {
+                    const transectionData = {
+                        userid: val.user_id,
+                        amount: val.total,
+                        category: "Order",
+                        type: "income",
+                        refrence: val._id,
+                        description: "Schedule order insert at " + endTime.toISOString(),
+                        date: (new Date(val.date)).toISOString(),
+                        isAuto: 1
+                    };
+                    
+                    await (new transectionModel(transectionData)).save();
+                    console.log("insert done ", val._id);
+                } catch (error) {
+                    console.error("Error processing order:", error);
+                }
+            }));
+        }
+    } catch (error) {
+        console.error("OrderToTransection failed:", error);
     }
-    console.log("end OrderToTransection")
-    
+    console.log("end OrderToTransection");
 }

@@ -58,10 +58,10 @@ function EditProduct() {
         let formIsValid = true;
         let errors = {};
 
-        // Name validation (only letters)
-        if (!/^[A-Za-z]+$/.test(name)) {
+        // Name validation: letters and spaces only (allow spaces for multi-word names)
+        if (!/^[A-Za-z\s]+$/.test(name.trim())) {
             formIsValid = false;
-            errors.name = "Name must contain only letters.";
+            errors.name = "Name must contain only letters and spaces.";
         }
 
         // Description validation (cannot be only numeric)
