@@ -25,10 +25,10 @@ function AddProduct() {
         let formIsValid = true;
         let errors = {};
 
-        // Name validation (only letters)
-        if (!/^[A-Za-z]+$/.test(name)) {
+        // Name validation (only letters allowed)
+        if (!/^[A-Za-z\s]+$/.test(name)) {
             formIsValid = false;
-            errors.name = "Name must contain only letters.";
+            errors.name = "Name must contain only letters and spaces.";
         }
 
         // Description validation (cannot be only numeric)
@@ -37,31 +37,32 @@ function AddProduct() {
             errors.description = "Description cannot be only numeric.";
         }
 
-        // Brand validation (cannot be only numeric, but can be letters or alphanumeric)
+        // Brand validation (cannot be only numeric, but can be alphanumeric)
         if (/^\d+$/.test(brand)) {
             formIsValid = false;
             errors.brand = "Brand cannot be only numeric.";
         }
 
-        // Price validation (must be numeric)
+        // Price validation (must be numeric and positive)
         if (isNaN(price) || price <= 0) {
             formIsValid = false;
             errors.price = "Price must be a positive number.";
         }
 
-        // Quantity validation (must be numeric)
+        // Quantity validation (must be numeric and non-negative)
         if (isNaN(quantity) || quantity < 0) {
             formIsValid = false;
             errors.quantity = "Quantity must be a non-negative number.";
         }
 
-        // Weight validation (must be numeric)
+
+        // Weight validation (if provided, must be numeric)
         if (weight && isNaN(weight)) {
             formIsValid = false;
             errors.weight = "Weight must be numeric.";
         }
 
-        // Discount validation (must be numeric)
+        // Discount validation (if provided, must be numeric)
         if (discount && isNaN(discount)) {
             formIsValid = false;
             errors.discount = "Discount must be numeric.";
