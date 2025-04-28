@@ -37,7 +37,7 @@ function AddProduct() {
             errors.description = "Description cannot be only numeric.";
         }
 
-        // Brand validation (cannot be only numeric, but can be letters or alphanumeric)
+        // Brand validation (cannot be only numeric, but can be alphanumeric)
         if (/^\d+$/.test(brand)) {
             formIsValid = false;
             errors.brand = "Brand cannot be only numeric.";
