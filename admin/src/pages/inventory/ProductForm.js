@@ -56,7 +56,7 @@ function AddProduct() {
         }
 
 
-        // Weight validation (must be numeric)
+        // Weight validation (if provided, must be numeric)
         if (weight && isNaN(weight)) {
             formIsValid = false;
             errors.weight = "Weight must be numeric.";
