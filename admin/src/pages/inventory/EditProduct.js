@@ -89,8 +89,8 @@ function EditProduct() {
         errors.quantity = "Quantity must be a non-negative whole number.";
     }
 
-        // Weight validation (must be numeric)
-        if (weight && isNaN(weight)) {
+         // Weight validation: must be numeric (optional)
+         if (weight && isNaN(weight)) {
             formIsValid = false;
             errors.weight = "Weight must be numeric.";
         }
