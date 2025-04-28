@@ -83,11 +83,11 @@ function EditProduct() {
         }
 
 
-        // Quantity validation (must be numeric)
-        if (isNaN(quantity) || quantity < 0) {
-            formIsValid = false;
-            errors.quantity = "Quantity must be a non-negative number.";
-        }
+       // Quantity validation: must be non-negative integer
+       if (isNaN(quantity) || quantity < 0 || !Number.isInteger(Number(quantity))) {
+        formIsValid = false;
+        errors.quantity = "Quantity must be a non-negative whole number.";
+    }
 
         // Weight validation (must be numeric)
         if (weight && isNaN(weight)) {
