@@ -10,7 +10,10 @@ const formatDateTime = (date) => {
         month: 'long', 
         day: 'numeric',
         hour: '2-digit', 
-        minute: '2-digit'
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+        timeZone: 'Asia/Colombo'
     };
     return new Date(date).toLocaleString('en-US', options);
 };
@@ -25,15 +28,26 @@ export default class CreatePost extends Component {
             service: "",
             review: "",
             rating: "",
-            date: new Date(), // Add this line
+            date: new Date(),
             errors: {}
         };
+    }
+
+    componentDidMount() {
+        this.timerID = setInterval(() => {
+            this.setState({
+                date: new Date()
+            });
+        }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID);
     }
 
     handleInputChange = (e) => {
         const { name, value } = e.target;
         
-        // Allow all characters in the phone input
         this.setState({
             [name]: value
         });
@@ -82,7 +96,6 @@ export default class CreatePost extends Component {
             isValid = false;
         }
 
-        // Validate review: can't be only numbers
         if (!review) {
             errors.review = "Review is required";
             isValid = false;
@@ -101,6 +114,8 @@ export default class CreatePost extends Component {
 
         const { name, phone, email, service, review, rating } = this.state;
 
+        const colomboTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' });
+
         const data = {
             name,
             phone,
@@ -108,7 +123,7 @@ export default class CreatePost extends Component {
             service,
             review,
             rating,
-            date: new Date().toISOString() // Capture exact submission time
+            date: new Date(colomboTime).toISOString()
         };
 
         axios.post("http://localhost:5000/post/save", data)
@@ -122,7 +137,7 @@ export default class CreatePost extends Component {
                         service: "",
                         review: "",
                         rating: "",
-                        date: new Date() // Reset date to current
+                        date: new Date()
                     });
                 } else {
                     alert("Submission failed. Please try again.");
@@ -217,11 +232,10 @@ export default class CreatePost extends Component {
                     <div className="createfeedpost_input_group">
                         <input
                             className='createfeed_input'
-                            type="datetime-local"
+                            type="text"
                             id="date"
                             name="date"
-                            value={this.state.date.toISOString().slice(0, 16)}
-                            onChange={(e) => this.setState({ date: new Date(e.target.value) })}
+                            value={formatDateTime(this.state.date)}
                             readOnly
                         />
                     </div><br />
