@@ -64,10 +64,10 @@ function EditProduct() {
             errors.name = "Name must contain only letters and spaces.";
         }
 
-        // Description validation (cannot be only numeric)
-        if (/^\d+$/.test(description)) {
+        // Description validation: cannot be empty or only numbers
+        if (!description.trim() || /^\d+$/.test(description.trim())) {
             formIsValid = false;
-            errors.description = "Description cannot be only numeric.";
+            errors.description = "Description cannot be empty or only numbers.";
         }
 
         // Brand validation (cannot be only numeric, but can be letters or alphanumeric)
