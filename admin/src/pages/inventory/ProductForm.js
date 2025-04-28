@@ -25,10 +25,10 @@ function AddProduct() {
         let formIsValid = true;
         let errors = {};
 
-        // Name validation (only letters)
-        if (!/^[A-Za-z]+$/.test(name)) {
+        // Name validation (only letters allowed)
+        if (!/^[A-Za-z\s]+$/.test(name)) {
             formIsValid = false;
-            errors.name = "Name must contain only letters.";
+            errors.name = "Name must contain only letters and spaces.";
         }
 
         // Description validation (cannot be only numeric)
