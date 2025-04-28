@@ -1,8 +1,9 @@
+
 import React, { useEffect, useState } from 'react';
 import { Form, Checkbox, DatePicker, TimePicker, Select, Flex, Button, Input } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import './EditAppointment.css'; // You can create a separate CSS file for styling
+import './EditAppointment.css';
 import HairImage from '../../images/customer_appointment/haircare.jpg';
 import SkinImage from '../../images/customer_appointment/skincare.jpg';
 import NailImage from '../../images/customer_appointment/nailcare.jpg';
@@ -49,7 +50,7 @@ function EditAppointment() {
                     }
                 })
                 .catch((error) => {
-                    alert("Error - " + error);
+                    alert("Error occurred while fetching appointment data - " + error.message);
                 });
 
             // Fetch stylist data
@@ -68,7 +69,7 @@ function EditAppointment() {
                     }
                 })
                 .catch((error) => {
-                    alert("Error - " + error);
+                    alert("Error occurred while fetching stylist data - " + error.message);
                 });
         } else {
             navigate("/login");
@@ -84,6 +85,8 @@ function EditAppointment() {
 
             if (token != null) {
                 setLoading(true);
+                console.log('Updating appointment with ID:', id); // Added console log
+
                 axios.post("http://localhost:5000/appointment/update", {
                     token: token,
                     appointment_id: id,
@@ -91,9 +94,8 @@ function EditAppointment() {
                     nail_care: formData.nailCare,
                     skin_care: formData.skinCare,
                     date: selectedDate.format('YYYY-MM-DD'),
-                    time:formData.time_range,
-                    stylist_id:formData.select
-                   
+                    time: formData.time_range,
+                    stylist_id: formData.select
                 })
                     .then((response) => {
                         const responseData = response.data;
@@ -109,7 +111,7 @@ function EditAppointment() {
                         }
                     })
                     .catch((error) => {
-                        alert("Error - " + error);
+                        alert("Error occurred while updating appointment - " + error.message);
                     });
             } else {
                 navigate("/login");
@@ -142,7 +144,7 @@ function EditAppointment() {
         return (
             <div className='bg-image-appointment'>
                 <div className="hero-text">
-                    <h1>Edit Appointment</h1>
+                    <h1>Update Appointment</h1> {/* Updated heading text */}
                     <br />
                     <br />
                     <p>Update your appointment details below:</p>
@@ -155,8 +157,9 @@ function EditAppointment() {
                         <div className='bottomsection'>
                             <Form layout='horizontal' onFinish={onFinish} initialValues={{ DatePicker: selectedDate, time_range: appointmentData.time, select: appointmentData.stylist_id }}>
                                 <div className='type-services'>
+                                    {/* Hair Care Section */}
                                     <div className='typediv'>
-                                        <div className='typeimg'> <img src={HairImage} alt="hair" /></div>
+                                        <div className='typeimg'><img src={HairImage} alt="hair" /></div>
                                         <div className="type">
                                             <div className="app_desc">Hair Care</div>
                                             <div className="categories">
@@ -172,8 +175,10 @@ function EditAppointment() {
                                             </div>
                                         </div>
                                     </div>
+
+                                    {/* Skin Care Section */}
                                     <div className='typediv'>
-                                        <div className='typeimg'> <img src={SkinImage} alt="skin" /></div>
+                                        <div className='typeimg'><img src={SkinImage} alt="skin" /></div>
                                         <div className="type">
                                             <div className="app_desc">Skin Care</div>
                                             <div className="categories">
@@ -190,8 +195,10 @@ function EditAppointment() {
                                             </div>
                                         </div>
                                     </div>
+
+                                    {/* Nail Care Section */}
                                     <div className='typediv'>
-                                        <div className='typeimg'> <img src={NailImage} alt="nail" /></div>
+                                        <div className='typeimg'><img src={NailImage} alt="nail" /></div>
                                         <div className="type">
                                             <div className="app_desc">Nail Care</div>
                                             <div className="categories">
@@ -203,11 +210,15 @@ function EditAppointment() {
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
+
+                                {/* Form Information Section */}
                                 <div className='forminfo'>
                                     <Form.Item name="DatePicker" label="Select Date" rules={[{ required: true, message: 'Please select a date!' }]}>
                                         <DatePicker className='datepic' disabledDate={disabledDate} onChange={handleDateChange} />
                                     </Form.Item>
+
                                     <Form.Item name="time_range" label="Select time" hasFeedback rules={[{ required: true, message: 'Please select your time!' }]}>
                                         <Select className='selectt' placeholder="Please select a time">
                                             <Option value="8 a.m. - 9 a.m.">8 a.m. - 9 a.m.</Option>
@@ -222,20 +233,22 @@ function EditAppointment() {
                                             <Option value="17 p.m. - 18 p.m.">17 p.m. - 18 p.m.</Option>
                                         </Select>
                                     </Form.Item>
+
                                     <Form.Item name="select" label="Select Stylist" hasFeedback rules={[{ required: true, message: 'Please select your Stylist!' }]}>
                                         <Select className='selects' placeholder="Please select a Stylist">
                                             {stylistData.map((item) =>
-                                                <Option value={item.employee_id}>{item.name}</Option>
+                                                <Option key={item.employee_id} value={item.employee_id}>{item.name}</Option>
                                             )}
                                         </Select>
                                     </Form.Item>
+
                                     <Flex gap="small" wrap="wrap">
                                         <Button className='submit' type="primary" htmlType='submit'>Submit</Button>
                                     </Flex>
                                 </div>
-
                             </Form>
 
+                            {/* Contact Info */}
                             <div className='bottom_des'>
                                 <h3>Book an appointment</h3>
                                 <br />
@@ -248,6 +261,7 @@ function EditAppointment() {
                                 <p>Phone : +94 77 434 9676</p>
                                 <br />
                             </div>
+
                         </div>
                     </div>
                 </div>
