@@ -183,14 +183,14 @@ function EditAppointment() {
                                             <div className="app_desc">Skin Care</div>
                                             <div className="categories">
                                                 <Checkbox.Group value={selectedServices.skinCare} onChange={(values) => handleServiceSelection('skinCare', values)}>
-                                                    <Checkbox value="Facial">Facial</Checkbox>
-                                                    <Checkbox value="Cleanup">Cleanup</Checkbox>
                                                     <Checkbox value="Bridal makeup">Bridal makeup</Checkbox>
-                                                    <Checkbox value="Normal makeup">Normal makeup</Checkbox>
                                                     <Checkbox value="Full face threading">Full face threading</Checkbox>
                                                     <Checkbox value="Eye brow shaping">Eye brow shaping</Checkbox>
-                                                    <Checkbox value="Hand waxing">Hand waxing</Checkbox>
                                                     <Checkbox value="Legs waxing">Legs waxing</Checkbox>
+                                                    <Checkbox value="Facial">Facial</Checkbox>
+                                                    <Checkbox value="Normal makeup">Normal makeup</Checkbox>
+                                                    <Checkbox value="Hand waxing">Hand waxing</Checkbox>
+                                                    <Checkbox value="Cleanup">Cleanup</Checkbox>
                                                 </Checkbox.Group>
                                             </div>
                                         </div>
@@ -203,9 +203,10 @@ function EditAppointment() {
                                             <div className="app_desc">Nail Care</div>
                                             <div className="categories">
                                                 <Checkbox.Group value={selectedServices.nailCare} onChange={(values) => handleServiceSelection('nailCare', values)}>
+                                                    
+                                                    <Checkbox value="Manicure">Manicure</Checkbox>
                                                     <Checkbox value="Nail polish">Nail polish</Checkbox>
                                                     <Checkbox value="Pedicure">Pedicure</Checkbox>
-                                                    <Checkbox value="Manicure">Manicure</Checkbox>
                                                 </Checkbox.Group>
                                             </div>
                                         </div>
