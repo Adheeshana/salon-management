@@ -70,10 +70,10 @@ function EditProduct() {
             errors.description = "Description cannot be empty or only numbers.";
         }
 
-        // Brand validation (cannot be only numeric, but can be letters or alphanumeric)
-        if (/^\d+$/.test(brand)) {
+         // Brand validation: cannot be only numeric
+         if (!brand.trim() || /^\d+$/.test(brand.trim())) {
             formIsValid = false;
-            errors.brand = "Brand cannot be only numeric.";
+            errors.brand = "Brand name must contain letters.";
         }
 
         // Price validation (must be numeric)
