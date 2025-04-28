@@ -33,7 +33,7 @@ function Store() {
 
   },[]);
  
-  //implement by savindu
+  
   function addCart(productId){
     
     axios.post("http://localhost:5000/cart/add", { token:token, product_id: productId, quantity:1}).then((response)=>{
