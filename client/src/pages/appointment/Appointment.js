@@ -1,3 +1,4 @@
+// Import necessary dependencies for Appointment Page
 import React, { useEffect, useState } from 'react';
 import { Form, Checkbox, DatePicker, TimePicker, Select, Flex, Button, Input } from 'antd';
 import axios from 'axios'; // Import Axios for making HTTP requests
@@ -12,9 +13,9 @@ import PageLoading from '../../components/loading/PageLoading';
 
 function Appointment() {
 
-    var { id } = useParams();
-    var token = useAuthToken();
-    var navigate = useNavigate();
+    const { id } = useParams(); 
+    const token = useAuthToken();
+    const navigate = useNavigate();
     const [isLoading, setLoading] = useState(true);
     const [stylish, setStylish] = useState({});
     const [selectedDate, setSelectedDate] = useState(null); // State to hold the selected date
@@ -29,23 +30,23 @@ function Appointment() {
 
         if (token != null) {
 
-            //load stylish details
+            // Load stylish details
             axios.post("http://localhost:5000/emp/get_employee", { token: token, employee_type: "6706267d7c3725406539345b" }).then((response) => {
 
-                var data = response.data;
-                var status = data.status;
-                if (status == "success") {
+                const data = response.data;
+                const status = data.status;
+                if (status === "success") {
                     setStylish(data.data);
                     setLoading(false);
-                } else if (status == "token_expired" || status == "auth_failed") {
+                } else if (status === "token_expired" || status === "auth_failed") {
                     navigate("/signout");
                 } else {
-                    var message = data.message;
+                    const message = data.message;
                     alert("Error - " + message);
                 }
 
             }).catch((error) => {
-                alert("Error 2 - " + error);
+                alert("Error occurred while fetching stylist data - " + error.message);
             });
 
         } else {
@@ -65,33 +66,32 @@ function Appointment() {
             if (token != null) {
 
                 setLoading(true);
+                console.log('Creating appointment...');
 
-                axios.post("http://localhost:5000/appointment/create", { token: token, stylist_id: formData.select, time: formData.time_range, date: selectedDate.format('YYYY-MM-DD'), hair_care: formData.hairCare, nail_care: formData.nailCare, skin_care: formData.skinCare, }).then((response) => {
+                axios.post("http://localhost:5000/appointment/create", { token: token, stylist_id: formData.select, time: formData.time_range, date: selectedDate.format('YYYY-MM-DD'), hair_care: formData.hairCare, nail_care: formData.nailCare, skin_care: formData.skinCare }).then((response) => {
 
-                    var data = response.data;
-                    var status = data.status;
-                    if (status == "success") {
+                    const data = response.data;
+                    const status = data.status;
+                    if (status === "success") {
                         alert("Appointment created...");
                         navigate("/my-app");
-                    } else if (status == "token_expired" || status == "auth_failed") {
+                    } else if (status === "token_expired" || status === "auth_failed") {
                         navigate("/signout");
                     } else {
-                        var message = data.message;
+                        const message = data.message;
                         alert("Error - " + message);
                     }
 
                 }).catch((error) => {
-                    alert("Error 2 - " + error);
+                    alert("Error occurred while creating appointment - " + error.message);
                 });
 
             } else {
                 navigate("/login");
             }
 
-            //show a success message or redirect the user
         } catch (error) {
             console.error('Error creating appointment:', error);
-            //show error message to the user
         }
     };
 
@@ -125,7 +125,7 @@ function Appointment() {
         return (
             <div className='bg-image-appointment'>
                 <div className="hero-text">
-                    <h1>Book Appointment</h1>
+                    <h1>Book Your Appointment</h1> 
                     <br />
                     <br />
                     <p>Use our booking calendar to reserve service required: choose date and appointment you are interested in.</p>
@@ -138,6 +138,7 @@ function Appointment() {
                         <div className='bottomsection'>
                             <Form layout='horizontal' onFinish={onFinish}>
                                 <div className='type-services'>
+                                    {/* Hair Care Section */}
                                     <div className='typediv'>
                                         <div className='typeimg'> <img src={HairImage} alt="hair" /></div>
                                         <div className="type">
@@ -155,6 +156,8 @@ function Appointment() {
                                             </div>
                                         </div>
                                     </div>
+
+                                    {/* Skin Care Section */}
                                     <div className='typediv'>
                                         <div className='typeimg'> <img src={SkinImage} alt="skin" /></div>
                                         <div className="type">
@@ -173,6 +176,8 @@ function Appointment() {
                                             </div>
                                         </div>
                                     </div>
+
+                                    {/* Nail Care Section */}
                                     <div className='typediv'>
                                         <div className='typeimg'> <img src={NailImage} alt="nail" /></div>
                                         <div className="type">
@@ -186,13 +191,15 @@ function Appointment() {
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
+
+                                {/* Form Information Section */}
                                 <div className='forminfo'>
-
-
                                     <Form.Item name="DatePicker" label="Select Date" rules={[{ required: true, message: 'Please select a date!' }]}>
                                         <DatePicker className='datepic' disabledDate={disabledDate} onChange={handleDateChange} />
                                     </Form.Item>
+
                                     <Form.Item name="time_range" label="Select time" hasFeedback rules={[{ required: true, message: 'Please select your time!' }]}>
                                         <Select className='selectt' placeholder="Please select a time">
                                             <Option value="8 a.m. - 9 a.m.">8 a.m. - 9 a.m.</Option>
@@ -207,20 +214,23 @@ function Appointment() {
                                             <Option value="17 p.m. - 18 p.m.">17 p.m. - 18 p.m.</Option>
                                         </Select>
                                     </Form.Item>
+
                                     <Form.Item name="select" label="Select Stylist" hasFeedback rules={[{ required: true, message: 'Please select your Stylist!' }]}>
                                         <Select className='selects' placeholder="Please select a Stylist">
                                             {stylish.map((item) =>
-                                                <Option value={item.employee_id}>{item.name}</Option>
+                                                <Option key={item.employee_id} value={item.employee_id}>{item.name}</Option>
                                             )}
                                         </Select>
                                     </Form.Item>
+
                                     <Flex gap="small" wrap="wrap">
                                         <Button className='submit' type="primary" htmlType='submit'>Submit</Button>
-
-
                                     </Flex>
+
                                 </div>
                             </Form>
+
+                            {/* Bottom Contact Section */}
                             <div className='bottom_des'>
                                 <h3>Book an appointment</h3>
                                 <br />
@@ -233,6 +243,7 @@ function Appointment() {
                                 <p>Phone : +94 77 434 9676</p>
                                 <br />
                             </div>
+
                         </div>
                     </div>
                 </div>
