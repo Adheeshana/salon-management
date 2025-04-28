@@ -132,6 +132,20 @@
   }
 }
 
+.review-timestamp {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .createfeed_input[type="datetime-local"] {
     padding: 8px;
     border: 1px solid #ccc;

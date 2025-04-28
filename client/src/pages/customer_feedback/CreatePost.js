@@ -4,6 +4,17 @@ import RatingSelect from './RatingSelect';
 import Feed_Card from './shared/Feed_Card';
 import './CreatePost.css';
 
+const formatDateTime = (date) => {
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit'
+    };
+    return new Date(date).toLocaleString('en-US', options);
+};
+
 export default class CreatePost extends Component {
     constructor(props) {
         super(props);
@@ -88,7 +99,7 @@ export default class CreatePost extends Component {
         e.preventDefault();
         if (!this.validateForm()) return;
 
-        const { name, phone, email, service, review, rating, date } = this.state;
+        const { name, phone, email, service, review, rating } = this.state;
 
         const data = {
             name,
@@ -97,7 +108,7 @@ export default class CreatePost extends Component {
             service,
             review,
             rating,
-            date: date.toISOString() // Add this line
+            date: new Date().toISOString() // Capture exact submission time
         };
 
         axios.post("http://localhost:5000/post/save", data)
