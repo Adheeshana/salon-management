@@ -95,10 +95,12 @@ function EditProduct() {
             errors.weight = "Weight must be numeric.";
         }
 
-        // Discount validation (must be numeric)
-        if (discount && isNaN(discount)) {
-            formIsValid = false;
-            errors.discount = "Discount must be numeric.";
+        // Discount validation: must be numeric and between 0-100 (optional)
+        if (discount) {
+            if (isNaN(discount) || discount < 0 || discount > 100) {
+                formIsValid = false;
+                errors.discount = "Discount must be between 0 and 100.";
+            }
         }
 
         if (!formIsValid) {
