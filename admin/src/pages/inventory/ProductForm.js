@@ -49,11 +49,12 @@ function AddProduct() {
             errors.price = "Price must be a positive number.";
         }
 
-        // Quantity validation (must be numeric)
+        // Quantity validation (must be numeric and non-negative)
         if (isNaN(quantity) || quantity < 0) {
             formIsValid = false;
             errors.quantity = "Quantity must be a non-negative number.";
         }
+
 
         // Weight validation (must be numeric)
         if (weight && isNaN(weight)) {
