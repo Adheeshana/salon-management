@@ -43,7 +43,7 @@ function AddProduct() {
             errors.brand = "Brand cannot be only numeric.";
         }
 
-        // Price validation (must be numeric)
+        // Price validation (must be numeric and positive)
         if (isNaN(price) || price <= 0) {
             formIsValid = false;
             errors.price = "Price must be a positive number.";
