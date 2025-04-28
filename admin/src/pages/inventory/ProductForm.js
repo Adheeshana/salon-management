@@ -62,7 +62,7 @@ function AddProduct() {
             errors.weight = "Weight must be numeric.";
         }
 
-        // Discount validation (must be numeric)
+        // Discount validation (if provided, must be numeric)
         if (discount && isNaN(discount)) {
             formIsValid = false;
             errors.discount = "Discount must be numeric.";
