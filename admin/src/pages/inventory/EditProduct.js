@@ -58,46 +58,49 @@ function EditProduct() {
         let formIsValid = true;
         let errors = {};
 
-        // Name validation (only letters)
-        if (!/^[A-Za-z]+$/.test(name)) {
+        // Name validation: letters and spaces only (allow spaces for multi-word names)
+        if (!/^[A-Za-z\s]+$/.test(name.trim())) {
             formIsValid = false;
-            errors.name = "Name must contain only letters.";
+            errors.name = "Name must contain only letters and spaces.";
         }
 
-        // Description validation (cannot be only numeric)
-        if (/^\d+$/.test(description)) {
+        // Description validation: cannot be empty or only numbers
+        if (!description.trim() || /^\d+$/.test(description.trim())) {
             formIsValid = false;
-            errors.description = "Description cannot be only numeric.";
+            errors.description = "Description cannot be empty or only numbers.";
         }
 
-        // Brand validation (cannot be only numeric, but can be letters or alphanumeric)
-        if (/^\d+$/.test(brand)) {
+         // Brand validation: cannot be only numeric
+         if (!brand.trim() || /^\d+$/.test(brand.trim())) {
             formIsValid = false;
-            errors.brand = "Brand cannot be only numeric.";
+            errors.brand = "Brand name must contain letters.";
         }
 
-        // Price validation (must be numeric)
+        // Price validation: must be positive number
         if (isNaN(price) || price <= 0) {
             formIsValid = false;
             errors.price = "Price must be a positive number.";
         }
 
-        // Quantity validation (must be numeric)
-        if (isNaN(quantity) || quantity < 0) {
-            formIsValid = false;
-            errors.quantity = "Quantity must be a non-negative number.";
-        }
 
-        // Weight validation (must be numeric)
-        if (weight && isNaN(weight)) {
+       // Quantity validation: must be non-negative integer
+       if (isNaN(quantity) || quantity < 0 || !Number.isInteger(Number(quantity))) {
+        formIsValid = false;
+        errors.quantity = "Quantity must be a non-negative whole number.";
+    }
+
+         // Weight validation: must be numeric (optional)
+         if (weight && isNaN(weight)) {
             formIsValid = false;
             errors.weight = "Weight must be numeric.";
         }
 
-        // Discount validation (must be numeric)
-        if (discount && isNaN(discount)) {
-            formIsValid = false;
-            errors.discount = "Discount must be numeric.";
+        // Discount validation: must be numeric and between 0-100 (optional)
+        if (discount) {
+            if (isNaN(discount) || discount < 0 || discount > 100) {
+                formIsValid = false;
+                errors.discount = "Discount must be between 0 and 100.";
+            }
         }
 
         if (!formIsValid) {

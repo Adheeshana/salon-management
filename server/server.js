@@ -33,12 +33,30 @@ app.use(form.any());
 
 
 var DB_URI = process.env.ATLAS_URI;
-var option = { dbName:"sms"};
-mongoose.connect(DB_URI, option).then(()=>{
-    console.log("Database connected!!!");
-}).catch((error)=>{
-    console.log("Db connect failed - "+error);
-});
+var option = { 
+    dbName: "sms",
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+    retryWrites: true
+};
+
+// Create a connection handler
+const connectDB = async () => {
+    try {
+        await mongoose.connect(DB_URI, option);
+        console.log("Database connected!!!");
+        // Only initialize scheduled jobs after successful DB connection
+        scheduledFunctions.initScheduledJobsMinite();
+    } catch (error) {
+        console.log("Db connect failed - " + error);
+        // Retry connection after 5 seconds
+        setTimeout(connectDB, 5000);
+    }
+};
+
+// Initial connection
+connectDB();
 
 //authentication
 app.use((req, res, next) => {
@@ -89,8 +107,6 @@ app.use((req, res, next) => {
     }
 
 });
-
-scheduledFunctions.initScheduledJobsMinite();
 
 app.use("/token", tokenRoute);
 app.use("/supplier", supplierRoute); 
