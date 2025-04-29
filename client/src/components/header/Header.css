@@ -109,13 +109,25 @@
 .signin-button {
     width: 85px;
     height: 35px;
-    background: none;
+    background-color: transparent;
     border: 1px solid black;
     color: black;
     border-radius: 30px;
-    font-family: 'Poppins';
+    font-family: 'Poppins', sans-serif;
     cursor: pointer;
-}
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    user-select: none;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .signin-button:hover {
+    background-color: black;
+    color: white;
+  }
+  
 
 .signout-button {
     width: 100px;
