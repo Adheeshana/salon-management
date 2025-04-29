@@ -1,1 +1,3 @@
 # Salon Management System
+
+Rebel Salon is a smart salon management system designed to revolutionize the client experience and streamline salon operations. With advanced face recognition technology, Rebel Salon identifies returning clients instantly and provides personalized haircut suggestions based on facial features, previous styles, and current trends. The system simplifies appointment bookings, manages stylist schedules, and keeps track of customer preferences — all in one platform. Whether it's recommending the perfect haircut or ensuring smooth day-to-day operations, Rebel Salon brings innovation and convenience to modern salon management.
