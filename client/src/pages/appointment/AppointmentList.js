@@ -1,8 +1,9 @@
+// Import necessary dependencies for Appointment List Page
 import React, { useEffect, useState } from "react";
 import './AppointmentList.css';
 import axios from 'axios';
 import { useAuthToken } from '../../auth';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; 
 import PageLoading from '../../components/loading/PageLoading';
 
 function AppointmentList() {
@@ -33,7 +34,7 @@ function AppointmentList() {
           }
         })
         .catch((error) => {
-          alert("Error - " + error);
+          alert("Error occurred while fetching appointments - " + error.message);
         });
     } else {
       navigate("/login");
@@ -43,7 +44,6 @@ function AppointmentList() {
   const handleEdit = (record) => {
     navigate(`/edit-app/${record.appointment_id}`);
   };
-  
 
   const handleDelete = (record) => {
     setDeleteConfirmation(record); // Set the appointment to be deleted
@@ -52,6 +52,7 @@ function AppointmentList() {
   const confirmDelete = () => {
     if (deleteConfirmation && token != null) {
       setLoading(true);
+      console.log('Deleting appointment: ', deleteConfirmation.appointment_id);
       axios.post("http://localhost:5000/appointment/delete", { token: token, appointment_id: deleteConfirmation.appointment_id })
         .then((response) => {
           const responseData = response.data;
@@ -69,7 +70,7 @@ function AppointmentList() {
           }
         })
         .catch((error) => {
-          alert("Error - " + error);
+          alert("Error occurred while deleting appointment - " + error.message);
           setDeleteConfirmation(null); // Reset delete confirmation
         });
     }
@@ -102,7 +103,7 @@ function AppointmentList() {
     return (
       <div className="app_bg">
         <div className='content'>
-          <h1>Your Appointments</h1>
+          <h1>My Appointments</h1> {/* Slight heading text update */}
           <input className='search' type="search" placeholder="Search here" value={searchQuery} onChange={handleSearch} />
           {deleteConfirmation && (
             <div className="confirmation-wrapper">
@@ -133,9 +134,7 @@ function AppointmentList() {
                     <td>{appointment.time}</td>
                     <td>{appointment.name}</td>
                     <td><button className='edt_btn' onClick={() => handleEdit(appointment)}>Edit</button></td>
-                    <td>
-                      <button className='delete_btn' onClick={() => handleDelete(appointment)}>Delete</button>
-                    </td>
+                    <td><button className='delete_btn' onClick={() => handleDelete(appointment)}>Delete</button></td>
                   </tr>
                 )) : data.map(appointment => (
                   <tr key={appointment.appointment_id}>
@@ -143,11 +142,8 @@ function AppointmentList() {
                     <td>{appointment.date}</td>
                     <td>{appointment.time}</td>
                     <td>{appointment.name}</td>
-                    <td><button className='edt_btn
-                    'onClick={() => handleEdit(appointment)}>Edit</button></td>
-                    <td>
-                      <button className='delete_btn' onClick={() => handleDelete(appointment)}>Delete</button>
-                    </td>
+                    <td><button className='edt_btn' onClick={() => handleEdit(appointment)}>Edit</button></td>
+                    <td><button className='delete_btn' onClick={() => handleDelete(appointment)}>Delete</button></td>
                   </tr>
                 ))}
               </tbody>
