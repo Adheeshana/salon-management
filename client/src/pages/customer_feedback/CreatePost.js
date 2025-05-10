@@ -4,6 +4,20 @@ import RatingSelect from './RatingSelect';
 import Feed_Card from './shared/Feed_Card';
 import './CreatePost.css';
 
+const formatDateTime = (date) => {
+    const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+        timeZone: 'Asia/Colombo'
+    };
+    return new Date(date).toLocaleString('en-US', options);
+};
+
 export default class CreatePost extends Component {
     constructor(props) {
         super(props);
@@ -14,14 +28,26 @@ export default class CreatePost extends Component {
             service: "",
             review: "",
             rating: "",
+            date: new Date(),
             errors: {}
         };
+    }
+
+    componentDidMount() {
+        this.timerID = setInterval(() => {
+            this.setState({
+                date: new Date()
+            });
+        }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerID);
     }
 
     handleInputChange = (e) => {
         const { name, value } = e.target;
         
-        // Allow all characters in the phone input
         this.setState({
             [name]: value
         });
@@ -70,7 +96,6 @@ export default class CreatePost extends Component {
             isValid = false;
         }
 
-        // Validate review: can't be only numbers
         if (!review) {
             errors.review = "Review is required";
             isValid = false;
@@ -89,7 +114,17 @@ export default class CreatePost extends Component {
 
         const { name, phone, email, service, review, rating } = this.state;
 
-        const data = { name, phone, email, service, review, rating };
+        const colomboTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Colombo' });
+
+        const data = {
+            name,
+            phone,
+            email,
+            service,
+            review,
+            rating,
+            date: new Date(colomboTime).toISOString()
+        };
 
         axios.post("http://localhost:5000/post/save", data)
             .then((res) => {
@@ -101,7 +136,8 @@ export default class CreatePost extends Component {
                         email: "",
                         service: "",
                         review: "",
-                        rating: ""
+                        rating: "",
+                        date: new Date()
                     });
                 } else {
                     alert("Submission failed. Please try again.");
@@ -175,6 +211,7 @@ export default class CreatePost extends Component {
                                 <option value='Hair Care'>Hair Care</option>
                                 <option value='Skin Care'>Skin Care</option>
                                 <option value='Nail Care'>Nail Care</option>
+                                <option value='Hair Style recommnedation'>Hair Style recommnedation</option>
                             </select>
                             {errors.service && <span className="error-text" style={{ color: "red" }}>{errors.service}</span>}
                         </div><br />
@@ -188,15 +225,26 @@ export default class CreatePost extends Component {
                                 placeholder="Write your review"
                                 value={this.state.review}
                                 onChange={this.handleInputChange}
-                            ></textarea>
-                            {errors.review && <span className="error-text" style={{ color: "red" }}>{errors.review}</span>}
-                        </div><br />
+                        ></textarea>
+                        {errors.review && <span className="error-text" style={{ color: "red" }}>{errors.review}</span>}
+                    </div><br />
 
-                        <button type="submit" className="btnpostsubmit">Submit</button>
-                    </form>
-                </Feed_Card>
-            </div>
+                    <div className="createfeedpost_input_group">
+                        <input
+                            className='createfeed_input'
+                            type="text"
+                            id="date"
+                            name="date"
+                            value={formatDateTime(this.state.date)}
+                            readOnly
+                        />
+                    </div><br />
+
+                    <button type="submit" className="btnpostsubmit">Submit</button>
+                </form>
+            </Feed_Card>
         </div>
-        );
-    }
+    </div>
+    );
+}
 }

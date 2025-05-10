@@ -131,7 +131,6 @@ export default class FeedbackHome extends Component {
               <div>
                 <div>Review: {post.review} </div>
                 <div className='feed_answer'> Reply : {post.reply}</div><br/>
-                
                 {!expanded[post._id] && (
                   <button onClick={() => this.toggleExpand(post._id)} className='feed_see-more'>
                     See More
